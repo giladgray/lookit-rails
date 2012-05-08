@@ -6,34 +6,42 @@ processImageLink = (index, tag) ->
   url = /http:\S*/.exec $(tag).attr("href")
   return if url is null
 
-  close = span("close", "&times;").hide()
-  close.click (event) ->
+  close = span("close btn-hover", "&times;").hide().click (event) ->
     event.preventDefault()
     $(this).closest(".pic-container").remove()
 
+  queue = span("queue btn-hover", "+queue").hide().click (event) ->
+    console.log "queuing this bad boy"
+    $("#queue").append $(this).closest(".pic-container").remove()
+
   linktag = link(url, "pic").attr("target", "_blank").append($(tag).find("img"))
-  $("#contents").append spantag = span "pic-container", linktag, close
+  $("#contents").append spantag = span "pic-container", linktag, close, queue
   spantag.click -> $("div#history").append($(this).detach())
-  spantag.mouseenter -> $(this).children(".close").show()
-  spantag.mouseleave -> $(this).children(".close").hide()
+  spantag.mouseenter -> $(this).children(".btn-hover").show()
+  spantag.mouseleave -> $(this).children(".btn-hover").hide()
+
 loadImages = (url) ->
-  url = "http://" + url  unless url.startsWith("http://")
+  url = "http://#{url}"  unless url.startsWith("http://")
   console.log "Loading URL " + url
-  $.get "/picpage/load.php",
-    url: url
-  , (response) ->
+  $.get "/show", url: url, (response) ->
     $(response).find("a>img").parent().each processImageLink
-    $("input#site").val ""
+    $("input#url").val ""
 
-history = undefined
-contents = undefined
-siteField = undefined
 $(document).ready ->
-  $("button#load").click ->
-    loadImages $("input#site").val()
+  $("button#lookit").click (event) ->
+    event.preventDefault()
+    loadImages $("input#url").val()
 
-  $(".clear").click ->
-    $(this).nextAll(".pic-container").remove()
+  $("button.clear").click ->
+    id = $(this).data("clear")
+    console.log "clearing ##{id}"
+    $("##{id}").children(".pic-container").remove()
 
-  $("input#site").keypress (event) ->
-    $("button#load").click()  if event.which is 13
+  $("button#openQueue").click ->
+    for pic in $("#queue").children(".pic-container")
+      window.open $(pic).find("a").attr("href")
+      $("#history").append $(pic).remove()
+    self.focus()
+
+  $("input#url").keypress (event) ->
+    $("button#lookit").click()  if event.which is 13

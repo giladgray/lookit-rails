@@ -10,6 +10,6 @@ class GalleryController < ApplicationController
   		@page = Net::HTTP.get(URI.parse(params[:url]))
   	end
   	
-  	render :layout => :nil
+  	render :layout => false
   end
 end
