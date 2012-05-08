@@ -1,0 +1,89 @@
+// Place all the styles related to the Gallery controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+@import "bootstrap";
+
+.container {
+  width: 970px;
+  margin: auto;
+}
+
+.right { float: right; }
+
+.sidebar {
+    width: 200px;
+    height: 100%;
+    position: fixed;
+    bottom: 0;
+    top: 0;
+    overflow-x: scroll;}
+
+#contents {
+}
+
+#history {
+  border: 2px solid gray;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px;
+}
+#history img {
+    width: 100%;
+    height: auto;
+    opacity: 0.5;
+}
+#history img:hover { opacity: 1.0; }
+
+.loadsite {
+  font-size: 24px;
+  padding: 20px 0;
+  margin: auto;
+}
+input#site {
+  width: 85%;
+  line-height: 30px;
+  padding: 4px;
+  font-size: inherit;
+}
+#load.btn {
+  width: 10%;
+  padding: 5px;
+  font-size: inherit;
+}
+
+.close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: red;
+  opacity: 0.3;
+  cursor: pointer;
+  font: bold 20px sans-serif;
+  text-align: right;
+  line-height: 16px;
+  width: 17px;
+  height: 20px;
+  border-radius: 0 0 0 12px;
+  padding-right: 3px;
+}
+.close:hover {
+  opacity: 0.75;
+}
+
+.pic-container {
+  margin: 5px;
+  display: inline-block;
+  position: relative;
+  width: auto;
+}
+.pic-container:hover {
+  border: 2px solid orange;
+  margin: 3px;
+}
+
+h2 {
+  margin: 0 0 5px;
+  border-bottom: 1px solid dimGray;
+  padding-bottom: 5px;
+}
