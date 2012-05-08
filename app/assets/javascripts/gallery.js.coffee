@@ -1,12 +1,26 @@
 # Place all the behaviors and hooks related to the matching controller here.
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
+
+# filetypes that can be displayed in the carousel
+window.validTypes = ['.jpg', '.png', '.bmp', '.gif', '.jpeg', '.mpg', '.wmv', '.mov']
+# TODO: implement HTML5 video tags
+
+window.blacklist = [/(\/|\.)ads?(\/|\.)/]
+window.blacklisted = (string) ->
+  reject = false
+  for item in blacklist
+    if item.test(string)
+      reject = true 
+      console.log "'#{string}' rejected by blacklist"
+  reject
+
 processImageLink = (tag) ->
   console.log tag
   # search url string for valid URL with http:// prefix, GTFO if fail.
   # this ignores relative links and finds URLs hidden in query string.
   url = /http:\S*/.exec $(tag).attr("href")
-  return if url is null
+  return if url is null or blacklisted(url)
 
   # the X button (top-right) deletes this pic
   close = span("close btn-hover", "&times;").hide().click (event) ->
@@ -59,15 +73,11 @@ createContents = (name, url) ->
   header = div "page-header", div("btn-group right", refresh, carousel, remove), tag("<h2>", '', link(url, '', name).attr("target", "_blank"))
   div "row", header, div("site-list").attr("id", id)
 
-# filetypes that can be displayed in the carousel
-window.validTypes = ['.jpg', '.png', '.bmp', '.gif', '.jpeg', '.mpg', '.wmv', '.mov']
-# TODO: implement HTML5 video tags
-
 createCarousel = (list) ->
   console.log "Creating carousel..."
   console.log list
   # construct the carousel HTML
-  carousel = div "carousel slide", inner = div("carousel-inner"), link("#carousel", "left carousel-control").attr("data-slide", "prev"), link("#carousel", "right carousel-control").attr("data-slide", "next")
+  carousel = div "carousel slide", inner = div("carousel-inner"), link("#carousel", "left carousel-control", "&lsaquo;").attr("data-slide", "prev"), link("#carousel", "right carousel-control", "&rsaquo;").attr("data-slide", "next")
   carousel.attr("id", "carousel")
 
   # add items from the list to the carousel
