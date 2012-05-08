@@ -6,13 +6,16 @@
 window.validTypes = ['.jpg', '.png', '.bmp', '.gif', '.jpeg', '.mpg', '.wmv', '.mov']
 # TODO: implement HTML5 video tags
 
+# list of blacklist regexes that will reject a URL
 window.blacklist = [/(\/|\.)ads?(\/|\.)/]
 window.blacklisted = (string) ->
   reject = false
+  # check the string against each blacklist entry
   for item in blacklist
     if item.test(string)
       reject = true 
       console.log "'#{string}' rejected by blacklist"
+      break
   reject
 
 processImageLink = (tag) ->
@@ -60,17 +63,17 @@ contentIndex = 0
 createContents = (name, url) ->
   id = "content#{contentIndex++}"
   # remove button deletes this row from the UI
-  remove = btn("remove", "Remove").attr("data-remove", id).click ->
+  remove = btn("remove", icon("trash")).attr("title", "Remove this gallery").attr("data-remove", id).click ->
     $(this).parent().parent().remove()
   # refresh button reloads images from the URL
-  refresh = btn("refresh", "Refresh").attr("data-refresh", name).click ->
+  refresh = btn("refresh", icon("refresh")).attr("title", "Refresh this gallery").attr("data-refresh", name).click ->
     loadImages($(this).data("refresh"))
     # NOTE that refresh is accomplished by simply redoing the loadImages action
     remove.click()
-  carousel = btn("", "Carousel").attr("data-list", id).click ->
+  carousel = btn("", icon("play")).attr("title", "Slideshow it!").attr("data-list", id).click ->
     showModal createCarousel($("#" + $(this).data("list")))
 
-  header = div "page-header", div("btn-group right", refresh, carousel, remove), tag("<h2>", '', link(url, '', name).attr("target", "_blank"))
+  header = div "page-header", div("btn-group right", carousel, refresh, remove), tag("<h2>", '', link(url, '', name).attr("target", "_blank"))
   div "row", header, div("site-list").attr("id", id)
 
 createCarousel = (list) ->

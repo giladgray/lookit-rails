@@ -24,3 +24,8 @@ window.link = (href, classes, body...) ->
   tag("<a>", classes, body...).attr("href", href)
 window.img = (src, classes, body...) ->
   tag("<img>", classes, body...).attr("src", src)
+
+window.icon = (name, white=false) ->
+  html = tag("<i>", "icon-#{name}")
+  html.addClass("icon-white") if white
+  html
