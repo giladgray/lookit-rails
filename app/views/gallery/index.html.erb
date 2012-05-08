@@ -1,21 +1,15 @@
 <div class="container">
 	<div class="row">
 			<div class="input-prepend input-append well form-inline lookit">
-				<span class="add-on input-large">http://</span><%= text_field_tag "url", nil, class: "input-large site span10", placeholder: "enter a URL to load" %><%= button_tag id: "lookit", class: "btn btn-info btn-large" do %><i class="icon-search icon-white"></i> lookit<% end %>
+				<span class="add-on input-large">http://</span><%= text_field_tag "url", params[:url], class: "input-large site span10", placeholder: "enter an address to load" %><%= button_tag id: "lookit", class: "btn btn-info btn-large" do %><i class="icon-search icon-white"></i> lookit<% end %>
 			</div>
-	</div> 
-	<div class="row">
-		<div class="page-header">
-			<button class="btn right clear" data-clear="contents">Clear</button>
-			<h2>Contents</h2>
-		</div>
-		<div class="site-list" id="contents">
-		</div>
 	</div>
 </div>
 <div class="sidebar left well">
 	<div class="page-header">
-		<button class="btn right clear" data-clear="history">Clear</button>
+		<div class="btn-group right">
+			<button class="btn clear" data-clear="history">Clear</button>
+		</div>
 		<h2>History</h2>  
 	</div>
 	<div class="site-list fadeout" id="history">
@@ -23,8 +17,10 @@
 </div>
 <div class="sidebar right well">
 	<div class="page-header">
-		<button class="btn right clear" data-clear="queue">Clear</button>
-		<button class="btn right" id="openQueue">Open</button>
+		<div class="btn-group right">
+			<button class="btn" id="openQueue">Open</button>
+			<button class="btn clear" data-clear="queue">Clear</button>
+		</div>
 		<h2>Queue</h2>  
 	</div>
 	<div class="site-list fadeout" id="queue">

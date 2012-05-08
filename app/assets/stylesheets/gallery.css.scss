@@ -73,7 +73,20 @@ input#site2 {
 }
 .btn-hover:hover { opacity: 0.75; }
 
-.close {
+.lookit.btn-hover {
+	position: absolute;
+	top: 0;
+	left: 0;
+	background: skyblue;
+	text-align: right;
+	line-height: 16px;
+	width: 17px;
+	height: 19px;
+	border-radius: 0 0 12px 0;
+	padding-right: 3px;
+	padding-top: 1px;
+}
+.close.btn-hover {
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -86,7 +99,7 @@ input#site2 {
 	padding-right: 3px;
 }
 
-.queue {
+.queue.btn-hover {
 	position: absolute;
 	bottom: 0;
 	left: 0;
