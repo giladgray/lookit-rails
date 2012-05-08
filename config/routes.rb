@@ -3,7 +3,9 @@ Lookit::Application.routes.draw do
 
   get "gallery/show"
 
-  root :to => "gallery#show"
+  root :to => "gallery#index"
+
+  match 'show' => "gallery#show"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
