@@ -53,9 +53,36 @@ createContents = (name, url) ->
     loadImages($(this).data("refresh"))
     # NOTE that refresh is accomplished by simply redoing the loadImages action
     remove.click()
+  carousel = btn("", "Carousel").attr("data-list", id).click ->
+    showModal createCarousel($("#" + $(this).data("list")))
 
-  header = div "page-header", div("btn-group right", remove, refresh), tag("<h2>", '', link(url, '', name).attr("target", "_blank"))
+  header = div "page-header", div("btn-group right", refresh, carousel, remove), tag("<h2>", '', link(url, '', name).attr("target", "_blank"))
   div "row", header, div("site-list").attr("id", id)
+
+# filetypes that can be displayed in the carousel
+window.validTypes = ['.jpg', '.png', '.bmp', '.gif', '.jpeg', '.mpg', '.wmv', '.mov']
+# TODO: implement HTML5 video tags
+
+createCarousel = (list) ->
+  console.log "Creating carousel..."
+  console.log list
+  # construct the carousel HTML
+  carousel = div "carousel slide", inner = div("carousel-inner"), link("#carousel", "left carousel-control").attr("data-slide", "prev"), link("#carousel", "right carousel-control").attr("data-slide", "next")
+  carousel.attr("id", "carousel")
+
+  # add items from the list to the carousel
+  for pic in list.find("a")
+    src = $(pic).attr("href")
+    filetype = /\.[a-z]+$/.exec(src)
+    # only add item to carousel if it is a link to an acceptable filetype
+    inner.append div("item", img(src)) if filetype isnt null and filetype[0] in validTypes
+  inner.find(":first-child").addClass("active")
+
+  carousel
+
+showModal = (contents) ->
+  # show a modal dialog with the given contents
+  div("modal", contents).attr("id", "modal").modal('show')
 
 $(document).ready ->
   # click the lookit button to load images from the URL

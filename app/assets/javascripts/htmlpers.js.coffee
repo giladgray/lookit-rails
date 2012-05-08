@@ -22,3 +22,5 @@ window.li = (classes, body...) ->
   tag "<li>", classes, body...
 window.link = (href, classes, body...) ->
   tag("<a>", classes, body...).attr("href", href)
+window.img = (src, classes, body...) ->
+  tag("<img>", classes, body...).attr("src", src)
