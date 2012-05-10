@@ -31,6 +31,10 @@
 .well.lookit {
 	border-radius: 0 0 10px 10px;
 }
+.form-inline { display: inline-block;}
+.options {
+	display: inline-block;
+}
 
 .site-list {
 	/* border: 2px solid gray;
@@ -41,6 +45,7 @@
 .site-list img {
 	max-width: 100%;
 	height: auto;
+	float: left;
 }
 .site-list.fadeout img {	opacity: 0.5; }
 .site-list.fadeout img:hover { opacity: 1.0; }
@@ -129,6 +134,10 @@ input#site2 {
 	max-height: 90%;
 	margin: auto;
 	padding: 10px;
+}
+.modal > img {
+	display: block;
+	margin: auto;
 }
 
 .carousel .item > img {

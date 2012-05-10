@@ -1,7 +1,15 @@
 <div class="container">
-	<div class="row">
-			<div class="input-prepend input-append well form-inline lookit">
-				<span class="add-on input-large">http://</span><%= text_field_tag "url", params[:url], class: "input-large site span10", placeholder: "enter an address to load" %><%= button_tag id: "lookit", class: "btn btn-info btn-large" do %><i class="icon-search icon-white"></i> lookit<% end %>
+	<div class="row well">
+			<div class="input-prepend input-append form-inline lookit">
+				<span class="add-on input-large">http://</span><%= text_field_tag "url", params[:url], class: "input-large site span9", placeholder: "enter an address to load" %><%= button_tag id: "lookit", class: "btn btn-info btn-large" do %><i class="icon-search icon-white"></i> lookit<% end %>
+			</div>
+			<div class="btn-group options">
+				<button class="btn btn-large dropdown-toggle" data-toggle="dropdown">
+					<i class="icon-cog"></i> <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li><a href="javascript:">Do something</a></li>
+				</ul>
 			</div>
 	</div>
 </div>
