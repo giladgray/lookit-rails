@@ -52,11 +52,14 @@ window.urlMagic = (plainUrl, siteUrl) ->
   # this ignores relative links and finds URLs hidden in query string.
   urlMatch = /(https?:\/\/[\w\d\.\/:]*)\??/.exec plainUrl
   if urlMatch is null  # no match
+    siteUrl = siteUrl.substring(0, siteUrl.length - 1) if siteUrl.endsWith '/'
+    plainUrl = '/' + plainUrl unless plainUrl.startsWith '/'
+    url = siteUrl + plainUrl
     # make relative URL into whole URL
-    siteEnd = siteUrl.endsWith('/')
-    plainStart = plainUrl.startsWith("/") 
-    if siteEnd and plainStart then siteUrl = siteUrl.substring(0, siteUrl.length - 1)
-    if siteEnd or plainStart then url = siteUrl + plainUrl else url = null
+    # siteEnd = siteUrl.endsWith('/')
+    # plainStart = plainUrl.startsWith("/") 
+    # if siteEnd and plainStart then siteUrl = siteUrl.substring(0, siteUrl.length - 1)
+    # if siteEnd or plainStart then url = siteUrl + plainUrl else url = null
   else  # we've got a match
     url = urlMatch[1]
   return if url is null
@@ -137,7 +140,7 @@ createContents = (name, url) ->
   carousel = btn("", icon("play")).attr("title", "Slideshow it!").attr("data-list", id).click ->
     showModal createCarousel($("#" + $(this).data("list")))
 
-  header = div "page-header", div("btn-group right", carousel, refresh, remove), tag("<h2>", '', link(url, '', name).attr("target", "_blank"))
+  header = div "page-header", div("btn-group right", carousel, refresh, remove), tag("<h2>", '', link(url, '', name)) #.attr("target", "_blank"))
   div "row", header, div("site-list").attr("id", id)
 
 createCarousel = (list) ->
