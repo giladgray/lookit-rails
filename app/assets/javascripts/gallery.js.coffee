@@ -4,10 +4,18 @@
 
 # filetypes that can be displayed in the carousel
 window.validTypeChecks = 
-  gallery: /(\w+)\/?(\w\.html)?\??(.*)/
-  image: /\.(jpg|png|bmp|gif|jpeg)$/
-  video: /\.(mpg|wmv|mov)$/
-  embed: /<embed/
+  gallery: 
+    pattern: /(\w+)\/?(\w\.html)?\??(.*)/
+    icon: 'icon-th'
+  image: 
+    pattern: /\.(jpg|png|bmp|gif|jpeg)$/
+    icon: 'icon-picture'
+  video: 
+    pattern: /\.(mpg|wmv|mov)$/
+    icon: 'icon-film'
+  embed: 
+    pattern: /<embed/
+    icon: 'icon-file'
 # TODO: implement HTML5 video tags
 
 # list of blacklist regexes that will reject a URL
@@ -22,44 +30,25 @@ window.blacklisted = (string) ->
       break
   reject
 
+# the best regex: https?\:\/\/(?<url>[\w\d\.]+\.[\w\d]{2,3})(?<path>[-_\w\d\.\/\:]*)(\?(?<query>[-=_\w\d\&]+))?
 window.urlMagic = (plainUrl, siteUrl) ->
   # URL TYPES:
+  #                 [    url    ]/[          page           ]?[      query     ]
   # gallery: http://www.blank.com/path/to/gallery/(page.html)(?query=parameters)
   # image: http://www.blank.com/path/to/image.type
   # video: http://www.blank.com/path/to/video.type
-  # relative: /path/to/whatever
+  # relative: /path/to/whatever  
 
-  ###
-  1. find http://... within URL (if hidden in query parameter)
-  2. make relative URL into whole URL - prepend search URL
-  3. determine link type
-    a. image=false; image = type.test(url) or image for type in imageTypes
-    b. video=false; video = type.test(url) or video for type in videoTypes
-
-  ### 
-
-  ###if plainUrl.startsWith("/") 
-    if siteUrl.endsWith("/") 
-      plainUrl = siteUrl.substring(0, siteUrl.length - 1) + plainUrl
-    else
-      plainUrl = siteUrl + plainUrl
-
-  plainUrl = decodeURIComponent(plainUrl)###
-  
   #return null if url is null or blacklisted(url)
 
   # search url string for valid URL with http:// prefix, GTFO if fail.
   # this ignores relative links and finds URLs hidden in query string.
-  urlMatch = /(https?:\/\/[\w\d\.\/:]*)\??/.exec plainUrl
+  urlMatch = /(https?\:\/\/[-\w\d\.\/\:]*)\??/.exec plainUrl
   if urlMatch is null  # no match
+    # make relative URL into whole URL
     siteUrl = siteUrl.substring(0, siteUrl.length - 1) if siteUrl.endsWith '/'
     plainUrl = '/' + plainUrl unless plainUrl.startsWith '/'
     url = siteUrl + plainUrl
-    # make relative URL into whole URL
-    # siteEnd = siteUrl.endsWith('/')
-    # plainStart = plainUrl.startsWith("/") 
-    # if siteEnd and plainStart then siteUrl = siteUrl.substring(0, siteUrl.length - 1)
-    # if siteEnd or plainStart then url = siteUrl + plainUrl else url = null
   else  # we've got a match
     url = urlMatch[1]
   return if url is null
@@ -70,38 +59,41 @@ window.urlMagic = (plainUrl, siteUrl) ->
 linkMagic = (url) ->
   # determine link type using type:regex hash
   urlType = "gallery"
-  for type, regex of validTypeChecks
-    urlType = type if regex.test(url)
+  for type, value of validTypeChecks
+    if value.pattern.test(url)
+      urlType = type 
+      icon = value.icon
   # return html link tag
-  link(url, "pic #{urlType}").attr("target", "_blank")
+  [link(url, "pic #{urlType}").attr("target", "_blank"),
+   span("type btn-hover horizontal", "<i class='#{icon}'></i>")]
 
 handlePicClick = (pic) ->
   console.log "handling click for #{pic.attr("class")}: #{pic}"
   if pic.hasClass "image"
     showModal div('body', img(pic.attr("href")))
   else if pic.hasClass "video"
-    showModal createVideo pic
+    showModal createVideo(pic)
   else if pic.hasClass "gallery"  
     window.open "/?url=" + pic.attr("href")
 
 processImageLink = (tag, siteUrl) ->
-  linktag = linkMagic urlMagic($(tag).attr("href"), siteUrl)
+  [linktag, typetag] = linkMagic urlMagic($(tag).attr("href"), siteUrl)
   linktag.append img(urlMagic($(tag).find("img").attr("src"), siteUrl))
 
   # the X button (top-right) deletes this pic
-  close = span("close btn-hover", "&times;").hide().click (event) ->
+  close = span("close btn-hover vertical", "&times;").hide().click (event) ->
     event.preventDefault()
     $(this).closest(".pic-container").remove()
 
   # the Q button (bottom) adds this pic to the queue
-  queue = span("queue btn-hover", "+queue").hide().click (event) ->
+  queue = span("queue btn-hover horizontal", "+queue").hide().click (event) ->
     $("#queue").append $(this).closest(".pic-container").remove()
 
   # the OPEN button (top-left) opens this link in a new lookit window
-  open = span("lookit btn-hover", '<i class="icon-share"></i>').hide().click (event) ->
+  open = span("lookit btn-hover vertical", '<i class="icon-share"></i>').hide().click (event) ->
     url = $(this).closest(".pic-container").find("a").attr("href")
     console.log "launching link in new lookit: #{url}"
-    window.open "/?url=#{encodeURIComponent(url)}"
+    window.open url #"/?url=#{encodeURIComponent(url)}"
 
   # create a new link tag so we can set our own attributes on it
   linktag.click (event) ->
@@ -109,7 +101,7 @@ processImageLink = (tag, siteUrl) ->
     handlePicClick $(@)
     $("div#history").append($(this).detach())
   # make the pic-container tag, containing the link and all the controls we created above
-  spantag = span "pic-container", linktag, close, queue, open
+  spantag = span "pic-container", linktag, typetag, close, queue, open
   # add some event listeners to the pic-container: click to send to history, hover to show buttons
   spantag.hover((-> $(this).children(".btn-hover").show()), (-> $(this).children(".btn-hover").hide()))
   spantag
@@ -154,7 +146,7 @@ createCarousel = (list) ->
   for pic in list.find("a")
     src = $(pic).attr("href")
     # only add item to carousel if it is a link to an acceptable filetype
-    inner.append div("item", img(src)) if validTypeChecks.image.test(src)
+    inner.append div("item", img(src)) if validTypeChecks.image.pattern.test(src)
   inner.find(":first-child").addClass("active")
 
   carousel

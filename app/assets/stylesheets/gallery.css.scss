@@ -3,6 +3,16 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 @import "bootstrap";
+@mixin gradient($first, $second) {
+	background: $first;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$first', endColorstr='$second');
+	background: -webkit-gradient(linear, left top, left bottom, from($first), to($second));
+	background: -moz-linear-gradient(top,  $first,  $second);
+}
+
+.gradient {
+	@include gradient(black, white);
+}
 
 .container {
 	width: 970px;
@@ -78,39 +88,36 @@ input#site2 {
 	opacity: 0.3; 
 }
 .btn-hover:hover { opacity: 0.75; }
-
-.lookit.btn-hover {
+.btn-hover.vertical {
 	position: absolute;
 	top: 0;
-	left: 0;
-	background: skyblue;
-	text-align: right;
-	line-height: 16px;
-	width: 17px;
-	height: 19px;
-	border-radius: 0 0 12px 0;
-	padding-right: 3px;
-	padding-top: 1px;
-}
-.close.btn-hover {
-	position: absolute;
-	top: 0;
-	right: 0;
-	background: red;
-	text-align: right;
-	line-height: 16px;
-	width: 17px;
-	height: 20px;
-	border-radius: 0 0 0 12px;
-	padding-right: 3px;
-}
-
-.queue.btn-hover {
-	position: absolute;
 	bottom: 0;
+	line-height: 16px;
+	width: 17px;
+	padding-right: 3px;	
+}
+.btn-hover.horizontal {
+	position: absolute;
 	left: 0;
 	right: 0;
 	width: 100%;
+}
+
+.lookit.btn-hover {
+	left: 0;
+	// height: 19px;
+	// border-radius: 0 0 12px 0;
+	padding-top: 1px;
+	@include gradient(skyblue, transparent)
+}
+.close.btn-hover {
+	// height: 20px;
+	// border-radius: 0 0 0 12px;
+	right: 0;
+	@include gradient(red, transparent);
+}
+.queue.btn-hover {
+	bottom: 0;
 	background: green;
 }
 
