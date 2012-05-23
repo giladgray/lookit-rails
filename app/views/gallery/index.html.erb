@@ -14,8 +14,12 @@
 	</div>
 </div>
 <div class="sidebar left well">
+	<div class="tablet-only">
+		<%= button_tag id: "toggle", class: "btn btn-large rotated" do %><i class="icon-list"></i>History<% end %>
+	</div>
 	<div class="page-header">
 		<div class="btn-group right">
+			<button class="btn <%= 'active' if params[:history] or params[:h]%>" data-toggle="button" title="Enable History" id="useHistory"><i class="icon-ok"></i></button>
 			<button class="btn clear" data-clear="history" title="Clear the history"><i class="icon-trash"></i></button>
 		</div>
 		<h2>History</h2>  
@@ -24,6 +28,9 @@
 	</div>
 </div>
 <div class="sidebar right well">
+	<div class="tablet-only">
+		<%= button_tag id: "toggle", class: "btn btn-large rotated" do %><i class="icon-list"></i>Queue<% end %>
+	</div>
 	<div class="page-header">
 		<div class="btn-group right">
 			<button class="btn" id="openQueue" title="Open the queue in new tabs"><i class="icon-share"></i></button>

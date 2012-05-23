@@ -11,11 +11,14 @@ window.validTypeChecks =
     pattern: /\.(jpg|png|bmp|gif|jpeg)$/
     icon: 'icon-picture'
   video: 
-    pattern: /\.(mpg|wmv|mov)$/
+    pattern: /\.(mpg|mov|mp4)$/
     icon: 'icon-film'
   embed: 
     pattern: /<embed/
     icon: 'icon-file'
+  none:
+    pattern: /\.wmv$/
+    icon: 'icon-share'
 # TODO: implement HTML5 video tags
 
 # list of blacklist regexes that will reject a URL
@@ -67,14 +70,18 @@ linkMagic = (url) ->
   [link(url, "pic #{urlType}").attr("target", "_blank"),
    span("type btn-hover horizontal", "<i class='#{icon}'></i>")]
 
-handlePicClick = (pic) ->
+handlePicClick = (pic) =>
   console.log "handling click for #{pic.attr("class")}: #{pic}"
+  if $("#useHistory").hasClass("active")
+    $("#history").append(pic.detach())
   if pic.hasClass "image"
     showModal div('body', img(pic.attr("href")))
   else if pic.hasClass "video"
-    showModal createVideo(pic)
+    showModal createVideo(pic.attr("href"))
   else if pic.hasClass "gallery"  
     window.open "/?url=" + pic.attr("href")
+  else if pic.hasClass "none"
+    window.open pic.attr("href")
 
 processImageLink = (tag, siteUrl) ->
   [linktag, typetag] = linkMagic urlMagic($(tag).attr("href"), siteUrl)
@@ -99,7 +106,6 @@ processImageLink = (tag, siteUrl) ->
   linktag.click (event) ->
     event.preventDefault()
     handlePicClick $(@)
-    $("div#history").append($(this).detach())
   # make the pic-container tag, containing the link and all the controls we created above
   spantag = span "pic-container", linktag, typetag, close, queue, open
   # add some event listeners to the pic-container: click to send to history, hover to show buttons
@@ -136,10 +142,9 @@ createContents = (name, url) ->
   div "row", header, div("site-list").attr("id", id)
 
 createCarousel = (list) ->
-  console.log "Creating carousel..."
-  console.log list
+  console.log "Creating carousel... " + list
   # construct the carousel HTML
-  carousel = div "carousel slide", inner = div("carousel-inner"), link("#carousel", "left carousel-control", "&lsaquo;").attr("data-slide", "prev"), link("#carousel", "right carousel-control", "&rsaquo;").attr("data-slide", "next")
+  carousel = div "carousel slide", inner = div("carousel-inner"), link("#carousel", "left carousel-control btn-hover", "&lsaquo;").attr("data-slide", "prev"), link("#carousel", "right carousel-control btn-hover", "&rsaquo;").attr("data-slide", "next")
   carousel.attr("id", "carousel")
 
   # add items from the list to the carousel
@@ -150,6 +155,11 @@ createCarousel = (list) ->
   inner.find(":first-child").addClass("active")
 
   carousel
+
+createVideo = (src) ->
+  console.log "Creating video... #{src}"
+
+  $("<video>").attr("src", src).attr("controls", "controls")
 
 showModal = (contents) ->
   # show a modal dialog with the given contents
@@ -181,3 +191,9 @@ $(document).ready ->
   # automatically load images if URL parameter is specified.
   # the text input will be preloaded with params[:url] if it exists.
   $("button#lookit").click() if $("input#url").val()
+
+  $(window).resize (event) ->
+    if window.innerWidth < 1000
+      $(".sidebar").addClass("minimize")
+    else
+      $(".sidebar").removeClass("minimize")

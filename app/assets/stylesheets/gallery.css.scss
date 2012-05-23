@@ -9,6 +9,13 @@
 	background: -webkit-gradient(linear, left top, left bottom, from($first), to($second));
 	background: -moz-linear-gradient(top,  $first,  $second);
 }
+@mixin rotate($deg) {
+	-webkit-transform: rotate($deg);
+	-moz-transform: rotate($deg);
+	-ms-transform: rotate($deg);
+	-o-transform: rotate($deg);
+	transform: rotate($deg);
+}
 
 .gradient {
 	@include gradient(black, white);
@@ -30,6 +37,9 @@
 	top: 0;
 	overflow-x: hidden;
 	overflow-y: auto;
+	@media screen and (max-width: 1000px) {
+
+	}
 }
 .sidebar.well {
 	padding: 0 10px;
@@ -52,7 +62,7 @@
 	padding: 10px;
 	margin: 10px; */
 }
-.site-list img {
+.site-list img, .site-list video {
 	max-width: 100%;
 	height: auto;
 	float: left;
@@ -151,4 +161,35 @@ input#site2 {
 	max-width: 100%;
 	max-height: 100%;
 	margin: auto;
+}
+
+.rotated {
+	@include rotate(270deg);
+	position: relative;
+	left: -20px;
+	top: 40px;
+}
+
+.minimize h4 {
+	@include rotate(270deg);
+	left: -20px;
+	position: absolute;
+	top: 40px;
+	display: block;
+}
+.minimize .page-header, .minimize .site-list {
+	display: none;
+}
+
+.tablet-only {
+	@media screen and (min-width: 1001px) {
+		display: none;
+	}
+	@media screen and (max-width: 1000px) {
+		display: block;
+	}
+}
+
+@media only screen and (max-width: 1000px) {
+
 }
