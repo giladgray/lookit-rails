@@ -3,21 +3,26 @@
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
 # filetypes that can be displayed in the carousel
-window.validTypeChecks = 
+window.displayTypes = 
   gallery: 
     pattern: /(\w+)\/?(\w\.html)?\??(.*)/
+    show: (url) -> window.open "/?url=#{url}"
     icon: 'icon-th'
   image: 
     pattern: /\.(jpg|png|bmp|gif|jpeg)$/
+    show: (url) -> showModal div('body', img(url))
     icon: 'icon-picture'
   video: 
-    pattern: /\.(mpg|mov|mp4)$/
+    pattern: /\.(mov|mp4|flv)$/
+    show: (url) -> showModal div("video").attr("id", "video"), () -> createVideo(url)
     icon: 'icon-film'
   embed: 
     pattern: /<embed/
+    show: (url) ->
     icon: 'icon-file'
   none:
-    pattern: /\.wmv$/
+    pattern: /\.(wmv|mpg)$/
+    show: (url) -> window.open url
     icon: 'icon-share'
 # TODO: implement HTML5 video tags
 
@@ -62,7 +67,7 @@ window.urlMagic = (plainUrl, siteUrl) ->
 linkMagic = (url) ->
   # determine link type using type:regex hash
   urlType = "gallery"
-  for type, value of validTypeChecks
+  for type, value of displayTypes
     if value.pattern.test(url)
       urlType = type 
       icon = value.icon
@@ -71,17 +76,11 @@ linkMagic = (url) ->
    span("type btn-hover horizontal", "<i class='#{icon}'></i>")]
 
 handlePicClick = (pic) =>
-  console.log "handling click for #{pic.attr("class")}: #{pic}"
+  console.log "handling click for #{pic.attr("class")}: #{pic.attr('href')}"
   if $("#useHistory").hasClass("active")
     $("#history").append(pic.detach())
-  if pic.hasClass "image"
-    showModal div('body', img(pic.attr("href")))
-  else if pic.hasClass "video"
-    showModal createVideo(pic.attr("href"))
-  else if pic.hasClass "gallery"  
-    window.open "/?url=" + pic.attr("href")
-  else if pic.hasClass "none"
-    window.open pic.attr("href")
+  for type, value of displayTypes
+    if pic.hasClass(type) then value.show(pic.attr('href'))
 
 processImageLink = (tag, siteUrl) ->
   [linktag, typetag] = linkMagic urlMagic($(tag).attr("href"), siteUrl)
@@ -151,19 +150,27 @@ createCarousel = (list) ->
   for pic in list.find("a")
     src = $(pic).attr("href")
     # only add item to carousel if it is a link to an acceptable filetype
-    inner.append div("item", img(src)) if validTypeChecks.image.pattern.test(src)
+    inner.append div("item", img(src)) if displayTypes.image.pattern.test(src)
   inner.find(":first-child").addClass("active")
 
   carousel
 
-createVideo = (src) ->
+createVideo = (src, width=800, height=480) ->
   console.log "Creating video... #{src}"
+  #$("<video>").attr("src", src).attr("controls", "controls")
+  jwplayer('video').setup
+    flashplayer: 'player.swf'
+    file: src
+    controlbar: 'bottom'
+    width: width,
+    height: height
+  video
 
-  $("<video>").attr("src", src).attr("controls", "controls")
-
-showModal = (contents) ->
+showModal = (contents, callback) ->
   # show a modal dialog with the given contents
   div("modal", contents).attr("id", "modal").modal('show')
+
+  callback() if callback
 
 $(document).ready ->
   # click the lookit button to load images from the URL
