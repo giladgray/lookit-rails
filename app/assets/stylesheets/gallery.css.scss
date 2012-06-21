@@ -116,13 +116,13 @@ input#site2 {
 .lookit.btn-hover {
 	left: 0;
 	// height: 19px;
-	// border-radius: 0 0 12px 0;
+	border-radius: inherit 0 0 inherit;
 	padding-top: 1px;
 	@include gradient(skyblue, transparent)
 }
 .close.btn-hover {
 	// height: 20px;
-	// border-radius: 0 0 0 12px;
+	border-radius: 0 inherit inherit 0;
 	right: 0;
 	@include gradient(red, transparent);
 }
@@ -138,8 +138,7 @@ input#site2 {
 	width: auto;
 }
 .pic-container:hover {
-	border: 2px solid orange;
-	margin: 3px;
+	border-color: gold;
 }
 
 // resize the modal dialog so it adapts to the image size

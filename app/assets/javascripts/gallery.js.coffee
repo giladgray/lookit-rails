@@ -78,9 +78,13 @@ linkMagic = (url) ->
 handlePicClick = (pic) =>
   console.log "handling click for #{pic.attr("class")}: #{pic.attr('href')}"
   if $("#useHistory").hasClass("active")
-    $("#history").append(pic.detach())
+    addToList 'history', pic
   for type, value of displayTypes
     if pic.hasClass(type) then value.show(pic.attr('href'))
+
+addToList = (name, pic) ->
+  pic.addClass 'span6'
+  $("##{name}").append pic.remove()
 
 processImageLink = (tag, siteUrl) ->
   [linktag, typetag] = linkMagic urlMagic($(tag).attr("href"), siteUrl)
@@ -93,7 +97,8 @@ processImageLink = (tag, siteUrl) ->
 
   # the Q button (bottom) adds this pic to the queue
   queue = span("queue btn-hover horizontal", "+queue").hide().click (event) ->
-    $("#queue").append $(this).closest(".pic-container").remove()
+    addToList 'queue', $(this).closest(".pic-container")
+    #$("#queue").append $(this).closest(".pic-container").remove()
 
   # the OPEN button (top-left) opens this link in a new lookit window
   open = span("lookit btn-hover vertical", '<i class="icon-share"></i>').hide().click (event) ->
@@ -106,7 +111,7 @@ processImageLink = (tag, siteUrl) ->
     event.preventDefault()
     handlePicClick $(@)
   # make the pic-container tag, containing the link and all the controls we created above
-  spantag = span "pic-container", linktag, typetag, close, queue, open
+  spantag = span "pic-container thumbnail", linktag, typetag, close, open #, queue
   # add some event listeners to the pic-container: click to send to history, hover to show buttons
   spantag.hover((-> $(this).children(".btn-hover").show()), (-> $(this).children(".btn-hover").hide()))
   spantag
