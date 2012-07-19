@@ -2,8 +2,9 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-@import "bootstrap";
 @import "bootstrap-responsive";
+@import "bootstrap";
+
 @mixin gradient($first, $second) {
 	background: $first;
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$first', endColorstr='$second');
@@ -49,8 +50,30 @@
 // .sidebar.right { right: 0; }
 // .sidebar.left { left: 0; }
 
-.well.lookit {
+form.lookit {
 	border-radius: 0 0 10px 10px;
+	table {
+		margin: auto;
+    	display: inline-block;
+    	td:first-child {
+    		width: 95%;
+    		height: 40px;
+    	}
+    	td:last-child {
+    		width: 5%;
+    		height: 38px;
+    	}
+    	input[type=text] {
+    		width: 98%;
+			font-size: 15px;
+			border-radius: 5px 0 0 5px;
+			padding: 9px 1%;
+		}
+    	button { 
+    		width: 100px;
+    		border-radius: 0 5px 5px 0;
+    	}
+	}
 }
 .form-inline { display: inline-block;}
 .options {

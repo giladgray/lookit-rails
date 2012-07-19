@@ -1,8 +1,17 @@
 <div class="container">
 	<div class="well">
 			<form class="form-inline lookit input-prepend input-append row-fluid">
-				<span class="add-on input-large span2">http://</span><%= text_field_tag "url", params[:url], class: "input-large site span9", placeholder: "enter an address to load" %><%= button_tag id: "lookit", class: "btn btn-info btn-large span2" do %><i class="icon-search icon-white"></i> lookit<% end %>
+				<table>
+					<tr>
+						<td style="width:95%;height:40px;">
+							<input class="input-large site" id="url" name="url" placeholder="enter an address to load" type="text" value="<%= params[:url] %>">
+						</td><td style="width:5%;height:38px;">
+							<button class="btn btn-info btn-large" id="lookit"><i class="icon-search icon-white"></i> lookit</button>
+						</td>
+					</tr>
+				</table>
 			</form>
+
 	</div>
 </div>
 <div class="left history"> 	
