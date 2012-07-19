@@ -1,30 +1,24 @@
 <div class="container">
-	<div class="row well">
-			<div class="input-prepend input-append form-inline lookit">
-				<span class="add-on input-large">http://</span><%= text_field_tag "url", params[:url], class: "input-large site span9", placeholder: "enter an address to load" %><%= button_tag id: "lookit", class: "btn btn-info btn-large" do %><i class="icon-search icon-white"></i> lookit<% end %>
-			</div>
-			<div class="btn-group options">
-				<button class="btn btn-large dropdown-toggle" data-toggle="dropdown">
-					<i class="icon-cog"></i> <span class="caret"></span>
-				</button>
-				<ul class="dropdown-menu">
-					<li><a href="javascript:">Do something</a></li>
-				</ul>
-			</div>
+	<div class="well">
+			<form class="form-inline lookit input-prepend input-append row-fluid">
+				<span class="add-on input-large span2">http://</span><%= text_field_tag "url", params[:url], class: "input-large site span9", placeholder: "enter an address to load" %><%= button_tag id: "lookit", class: "btn btn-info btn-large span2" do %><i class="icon-search icon-white"></i> lookit<% end %>
+			</form>
 	</div>
 </div>
-<div class="sidebar left well">
+<div class="left history"> 	
 	<div class="tablet-only">
 		<%= button_tag id: "toggle", class: "btn btn-large rotated" do %><i class="icon-list"></i>History<% end %>
 	</div>
-	<div class="page-header">
-		<div class="btn-group right">
-			<button class="btn <%= 'active' if params[:history] or params[:h]%>" data-toggle="button" title="Enable History" id="useHistory"><i class="icon-ok"></i></button>
-			<button class="btn clear" data-clear="history" title="Clear the history"><i class="icon-trash"></i></button>
+	<div class="sidebar well">
+		<div class="page-header">
+			<div class="btn-group right">
+				<button class="btn <%= 'active' if params[:history] or params[:h]%>" data-toggle="button" title="Enable History" id="useHistory"><i class="icon-ok"></i></button>
+				<button class="btn clear" data-clear="history" title="Clear the history"><i class="icon-trash"></i></button>
+			</div>
+			<h2>History</h2>  
 		</div>
-		<h2>History</h2>  
-	</div>
-	<div class="site-list fadeout row-fluid" id="history">
+		<div class="site-list fadeout row-fluid" id="history">
+		</div>
 	</div>
 </div>
 <div class="sidebar right well">
