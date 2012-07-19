@@ -10,7 +10,7 @@ window.displayTypes =
     icon: 'icon-th'
   image: 
     pattern: /\.(jpg|png|bmp|gif|jpeg)$/
-    show: (url) -> showModal div('body', img(url))
+    show: (url) -> showModal img(url)
     icon: 'icon-picture'
   video: 
     pattern: /\.(mov|mp4|flv)$/
@@ -51,7 +51,7 @@ window.urlMagic = (plainUrl, siteUrl) ->
 
   # search url string for valid URL with http:// prefix, GTFO if fail.
   # this ignores relative links and finds URLs hidden in query string.
-  urlMatch = /(https?\:\/\/[-\w\d\.\/\:]*)\??/.exec plainUrl
+  urlMatch = /(https?\:\/\/[-=_\w\d\.\/\:]*)\??/.exec plainUrl
   if urlMatch is null  # no match
     # make relative URL into whole URL
     siteUrl = siteUrl.substring(0, siteUrl.length - 1) if siteUrl.endsWith '/'
@@ -122,9 +122,10 @@ loadImages = (url) ->
   console.log "Loading URL " + url
   # load the page, find all image links and process them
   $.get "/show", url: safeUrl, (response) ->
-    dest = createContents(url, safeUrl)
-    $(".container").append dest
-    dest.find(".site-list").append(processImageLink($(pic), safeUrl)) for pic in $(response).find("a>img").parent()
+    $(".container").append dest = createContents(url, safeUrl)
+    list = dest.find(".site-list")
+    for pic in $(response).find("a>img").parent()
+      list.append(processImageLink($(pic), safeUrl)) 
     #$(response).find("a>img").parent().each processImageLink
     $("input#url").val ""
 
@@ -149,7 +150,13 @@ createCarousel = (list) ->
   console.log "Creating carousel... " + list
   # construct the carousel HTML
   carousel = div "carousel slide", inner = div("carousel-inner"), link("#carousel", "left carousel-control btn-hover", "&lsaquo;").attr("data-slide", "prev"), link("#carousel", "right carousel-control btn-hover", "&rsaquo;").attr("data-slide", "next")
-  carousel.attr("id", "carousel")
+  carousel.attr("id", "carousel").keydown (evt) ->
+    console.log evt
+    switch evt.keydown
+      when 37 then $(".left.carousel-control").click()
+      when 39 then $(".right.carousel-control").click()
+
+
 
   # add items from the list to the carousel
   for pic in list.find("a")
@@ -171,9 +178,10 @@ createVideo = (src, width=800, height=480) ->
     height: height
   video
 
+@fs = btn("fullscreen", "fullscreen").click -> $(".modal").toggleClass('fullscreen')
 showModal = (contents, callback) ->
   # show a modal dialog with the given contents
-  div("modal", contents).attr("id", "modal").modal('show')
+  div("modal", @fs, contents).attr("id", "modal").modal('show')
 
   callback() if callback
 

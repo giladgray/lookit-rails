@@ -3,6 +3,7 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 @import "bootstrap";
+@import "bootstrap-responsive";
 @mixin gradient($first, $second) {
 	background: $first;
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$first', endColorstr='$second');
@@ -26,8 +27,8 @@
 	margin: auto;
 }
 
-.right { float: right; }
-.left { float: left; }
+.right { float: right; right: 0; }
+.left { float: left; left: 0; }
 
 .sidebar {
 	width: 200px;
@@ -37,16 +38,16 @@
 	top: 0;
 	overflow-x: hidden;
 	overflow-y: auto;
-	@media screen and (max-width: 1000px) {
-
+	@media screen and (max-width: 767px) {
+		display: none;
 	}
 }
 .sidebar.well {
 	padding: 0 10px;
 	border-radius: 0;
 }
-.sidebar.right { right: 0; }
-.sidebar.left { left: 0; }
+// .sidebar.right { right: 0; }
+// .sidebar.left { left: 0; }
 
 .well.lookit {
 	border-radius: 0 0 10px 10px;
@@ -89,6 +90,11 @@ input#site2 {
 	width: 10%;
 	padding: 5px;
 	font-size: inherit;
+}
+.btn.fullscreen {
+	position: absolute;
+	top: 10px;
+	right: 10px;
 }
 
 .btn-hover { 
@@ -145,15 +151,29 @@ input#site2 {
 .modal {
 	top: 5%;
 	left: 10%;
-	// width: auto;
 	width: 80%;
+	height: 90%;
 	max-height: 90%;
 	margin: auto;
 	padding: 10px;
+
+	img {
+		display: block;
+		margin: auto;
+		max-height: 100%;
+	}
 }
-.modal > img {
-	display: block;
-	margin: auto;
+.modal.fullscreen {
+	height: 100%;
+	top: 0;
+	bottom: 0;
+	max-height: 100%;
+
+	img {
+		height: auto;
+		max-height: none;
+		max-width: none;
+	}
 }
 
 .carousel .item > img {
