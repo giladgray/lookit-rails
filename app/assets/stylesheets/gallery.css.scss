@@ -118,6 +118,7 @@ input#site2 {
 	position: absolute;
 	top: 10px;
 	right: 10px;
+	z-index: 5;
 }
 
 .btn-hover { 
@@ -187,9 +188,11 @@ input#site2 {
 	}
 }
 .modal.fullscreen {
-	height: 100%;
+	@include size(100%, 100%);
 	top: 0;
 	bottom: 0;
+	left: 0;
+	right: 0;
 	max-height: 100%;
 
 	img {
