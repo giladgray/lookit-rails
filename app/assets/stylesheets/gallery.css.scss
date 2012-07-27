@@ -114,12 +114,6 @@ input#site2 {
 	padding: 5px;
 	font-size: inherit;
 }
-.btn.fullscreen {
-	position: absolute;
-	top: 10px;
-	right: 10px;
-	z-index: 5;
-}
 
 .btn-hover { 
 	cursor: pointer;
@@ -186,6 +180,13 @@ input#site2 {
 		margin: auto;
 		max-height: 100%;
 	}
+
+	.btn.fullscreen {
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		z-index: 5;
+	}
 }
 .modal.fullscreen {
 	@include size(100%, 100%);
@@ -199,6 +200,10 @@ input#site2 {
 		height: auto;
 		max-height: none;
 		max-width: none;
+	}
+
+	.btn.fullscreen {
+		position: fixed;
 	}
 }
 
