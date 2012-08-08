@@ -1,0 +1,7 @@
+<a class="pic <%= @model.get('type') %>" href="<%= @model.get('galleryUrl') %>" target="_blank">
+	<img src="<%= @model.get('thumbUrl') %>">
+</a>
+<span class="type btn-hover horizontal"><i class="<%= @model.get('icon') %>"></i></span>
+<span class="close btn-hover vertical">×</span>
+<span class="open btn-hover vertical"><i class="icon-share"></i>
+</span>

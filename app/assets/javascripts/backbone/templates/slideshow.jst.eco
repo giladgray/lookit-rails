@@ -1,0 +1,11 @@
+<div class="carousel slide" id="carousel">
+	<div class="carousel-inner">
+		<% for pic in @pics: %>
+		<div class="item">
+			<img src="<%= pic %>">
+		</div>
+		<% end %>
+	</div>
+	<a class="left carousel-control" href="#carousel" data-slide="prev">‹</a>
+	<a class="right carousel-control" href="#carousel" data-slide="next">›</a>
+</div>

@@ -39,18 +39,13 @@
 	top: 0;
 	overflow-x: hidden;
 	overflow-y: auto;
-	@media screen and (max-width: 767px) {
-		display: none;
-	}
 }
 .sidebar.well {
 	padding: 0 10px;
 	border-radius: 0;
 }
-// .sidebar.right { right: 0; }
-// .sidebar.left { left: 0; }
 
-form.lookit {
+.lookit {
 	border-radius: 0 0 10px 10px;
 	table {
 		margin: auto;
@@ -58,20 +53,31 @@ form.lookit {
     	td:first-child {
     		width: 95%;
     		height: 40px;
+    		vertical-align: top;
     	}
     	td:last-child {
     		width: 5%;
     		height: 38px;
+    		vertical-align: top;
     	}
-    	input[type=text] {
+    	input[type=text]:first-child {
     		width: 98%;
 			font-size: 15px;
 			border-radius: 5px 0 0 5px;
 			padding: 9px 1%;
+			margin: 0;
+			margin-bottom: 8px;
 		}
     	button { 
     		width: 100px;
     		border-radius: 0 5px 5px 0;
+    	}
+    	div {
+    		width: 100%;
+			.blacklist {
+				width: 50%;
+				border-radius: 0 5px 5px 0;
+			}
     	}
 	}
 }
@@ -119,9 +125,12 @@ input#site2 {
 	cursor: pointer;
 	font: bold 20px sans-serif;
 	text-align: center;
-	opacity: 0.3; 
+	opacity: 0.5; 
+	display: none;
 }
-.btn-hover:hover { opacity: 0.75; }
+.active .btn-hover { display: block; }
+
+.btn-hover:hover { opacity: 0.8; }
 .btn-hover.vertical {
 	position: absolute;
 	top: 0;
@@ -137,7 +146,7 @@ input#site2 {
 	width: 100%;
 }
 
-.lookit.btn-hover {
+.open.btn-hover {
 	left: 0;
 	// height: 19px;
 	border-radius: inherit 0 0 inherit;
@@ -163,6 +172,12 @@ input#site2 {
 }
 .pic-container:hover {
 	border-color: gold;
+}
+.pic-container.seen {
+	opacity: 0.7;
+}
+.pic-container.seen:hover {
+	border-color: orchid;
 }
 
 // resize the modal dialog so it adapts to the image size
@@ -238,8 +253,4 @@ input#site2 {
 	@media screen and (max-width: 1000px) {
 		display: block;
 	}
-}
-
-@media only screen and (max-width: 1000px) {
-
 }

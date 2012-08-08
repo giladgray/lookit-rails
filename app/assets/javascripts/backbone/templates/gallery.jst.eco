@@ -1,0 +1,9 @@
+<div class="page-header">
+	<div class="btn-group right">
+		<span class="btn slideshow" title="Slideshow it!" data-list="content2"><i class="icon-play"></i></span>
+		<span class="btn refresh" title="Refresh this gallery" data-refresh="<%= @url %>"><i class="icon-refresh"></i></span>
+		<span class="btn remove" title="Remove this gallery" data-remove="content<%= @id %>"><i class="icon-trash"></i></span>
+	</div>
+	<h2><a href="<%= @url %>"><%= @url %></a></h2>
+</div>
+<div class="site-list" id="content<%= @id %>"></div>

@@ -7,9 +7,14 @@ class GalleryController < ApplicationController
   def show
   	puts "SHOW SHOW SHOW"
   	if params.has_key?("url")
-  		@page = Net::HTTP.get(URI.parse(params[:url]))
+      url = params[:url]
+      url = "http://" + url unless url.start_with? 'http'
+  		@page = Net::HTTP.get(URI.parse(url))
   	end
   	
   	render :layout => false
+  end
+
+  def spine
   end
 end

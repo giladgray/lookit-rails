@@ -14,4 +14,10 @@
 //= require jquery_ujs
 //= require bootstrap
 //= require htmlpers
+//= require underscore
+//= require backbone
+//= require backbone_rails_sync
+//= require backbone_datalink
+//= require backbone/lookit
+//= require backbone
 //= require_tree .

@@ -6,7 +6,7 @@
 window.displayTypes = 
   gallery: 
     pattern: /(\w+)\/?(\w\.html)?\??(.*)/
-    show: (url) -> window.open "/?url=#{url}"
+    show: (url) -> window.open "##{url}"
     icon: 'icon-th'
   image: 
     pattern: /\.(jpg|png|bmp|gif|jpeg)$/
@@ -27,7 +27,7 @@ window.displayTypes =
 # TODO: implement HTML5 video tags
 
 # list of blacklist regexes that will reject a URL
-window.blacklist = [] # [/(\/|\.)ads?(\/|\.)/]
+window.blacklist = [/javascript/, /signup/, /track/, /#/] # [/(\/|\.)ads?(\/|\.)/]
 window.blacklisted = (string) ->
   reject = false
   # check the string against each blacklist entry
@@ -38,8 +38,15 @@ window.blacklisted = (string) ->
       break
   reject
 
+# search url string for valid URL with http:// prefix, GTFO if fail.
+# this ignores relative links and finds URLs hidden in query string.
+window.urlRegex =
+    ///(https?\://[-\w\d\.]+\.[\w\d]{2,3})  # 1. host
+       ((?:/[-_=\w\d\.\:]+)*)/?             # 2. path
+       (?:\?([-=_\w\d&]+))?///              # 3. query
+
 # the best regex: https?\:\/\/(?<url>[\w\d\.]+\.[\w\d]{2,3})(?<path>[-_\w\d\.\/\:]*)(\?(?<query>[-=_\w\d\&]+))?
-window.urlMagic = (plainUrl, siteUrl) ->
+window.urlMagic = (plainUrl, siteUrlBits) ->
   # URL TYPES:
   #                 [    url    ]/[          page           ]?[      query     ]
   # gallery: http://www.blank.com/path/to/gallery/(page.html)(?query=parameters)
@@ -49,28 +56,43 @@ window.urlMagic = (plainUrl, siteUrl) ->
 
   #return null if url is null or blacklisted(url)
 
-  # search url string for valid URL with http:// prefix, GTFO if fail.
-  # this ignores relative links and finds URLs hidden in query string.
-  urlMatch = /(https?\:\/\/[-=_\w\d\.\/\:]*)\??/.exec plainUrl
-  if urlMatch is null  # no match
-    # make relative URL into whole URL
-    siteUrl = siteUrl.substring(0, siteUrl.length - 1) if siteUrl.endsWith '/'
-    plainUrl = '/' + plainUrl unless plainUrl.startsWith '/'
-    url = siteUrl + plainUrl
+  urlMatch = urlRegex.exec plainUrl
+
+  # console.log "SITE:", siteUrlBits
+  # console.log "PAGE:", urlMatch
+  if urlMatch is null  # no match => relative URL
+    if plainUrl.startsWith '/'  # relative to root
+      url = siteUrlBits[1] + plainUrl
+    else  
+      url = siteUrlBits[1] + stripIndex(siteUrlBits[2]) + '/' + plainUrl
+    # siteUrl = siteUrl.substring(0, siteUrl.length - 1) if siteUrl.endsWith '/'
+    # plainUrl = '/' + plainUrl unless plainUrl.startsWith '/'
+    # url = siteUrl + plainUrl
   else  # we've got a match
-    url = urlMatch[1]
-  return if url is null
+    url = urlMatch[1] + urlMatch[2]
+    # url += '/' unless url.endsWith '/'
+  return unless url?
   url = url.replace(/(\"|')/g, "").replace(/\s/g, "+")
-  console.log "#{plainUrl} ==> #{url}"
+  console.log "MAGIC: #{plainUrl} + #{siteUrlBits} => #{url}"
   url
 
-linkMagic = (url) ->
+window.stripIndex = (string) ->
+  indexMatch = ///((?:/[-_=\w\d\.\:]+)*/)
+                  (index\.\w+)///.exec string
+  if indexMatch? then indexMatch[1] else string
+
+
+window.linkTypeAndIcon = (url) ->
   # determine link type using type:regex hash
   urlType = "gallery"
   for type, value of displayTypes
     if value.pattern.test(url)
       urlType = type 
       icon = value.icon
+  [urlType, icon]
+
+linkMagic = (url) ->
+  [urlType, icon] = linkTypeAndIcon url
   # return html link tag
   [link(url, "pic #{urlType}").attr("target", "_blank"),
    span("type btn-hover horizontal", "<i class='#{icon}'></i>")]
@@ -87,8 +109,9 @@ addToList = (name, pic) ->
   $("##{name}").append pic.remove()
 
 processImageLink = (tag, siteUrl) ->
-  [linktag, typetag] = linkMagic urlMagic($(tag).attr("href"), siteUrl)
-  linktag.append img(urlMagic($(tag).find("img").attr("src"), siteUrl))
+  siteUrlBits = urlRegex.exec siteUrl
+  [linktag, typetag] = linkMagic urlMagic($(tag).attr("href"), siteUrlBits)
+  linktag.append img(urlMagic($(tag).find("img").attr("src"), siteUrlBits))
 
   # the X button (top-right) deletes this pic
   close = span("close btn-hover vertical", "&times;").hide().click (event) ->
@@ -179,7 +202,7 @@ createVideo = (src, width=800, height=480) ->
   video
 
 @fs = btn("fullscreen", "fullscreen").click -> $(".modal").toggleClass('fullscreen')
-showModal = (contents, callback) ->
+window.showModal = (contents, callback) ->
   # show a modal dialog with the given contents
   div("modal", @fs, contents).attr("id", "modal").modal('show')
 

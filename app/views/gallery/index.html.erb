@@ -4,7 +4,10 @@
 				<table>
 					<tr>
 						<td style="width:95%;height:40px;">
-							<input class="input-large site" id="url" name="url" placeholder="enter an address to load" type="text" value="<%= params[:url] %>">
+							<input class="input-large site" id="url" name="url" placeholder="enter an address to load" type="text" value="<%= params[:url] %>">						
+							<div class="input-append">
+								<span class="add-on">blacklist:</span><input class="blacklist" id="blacklist" name="blacklist" placeholder="blacklisted URL segments" type="text">
+							</div>
 						</td><td style="width:5%;height:38px;">
 							<button class="btn btn-info btn-large" id="lookit"><i class="icon-search icon-white"></i> lookit</button>
 						</td>
