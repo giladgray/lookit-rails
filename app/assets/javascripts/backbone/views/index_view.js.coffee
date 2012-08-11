@@ -9,7 +9,8 @@ class Lookit.Views.IndexView extends Backbone.View
     $(@el).html(@template())
     return this
 
-  submit: =>
+  submit: (event) =>
+    event.preventDefault()
   	url = @$("#url").val()
   	console.log "clicked on the button!", url
   	router.navigate url, trigger: true

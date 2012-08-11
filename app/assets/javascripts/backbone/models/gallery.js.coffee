@@ -20,9 +20,28 @@ class Lookit.Collections.GalleriesCollection extends Backbone.Collection
 
   parse: (response) ->
     siteUrlBits = urlRegex.exec @models[0].get('url')
+    window.resp = response = $(response)
+
+    # seems the first element in the response is the page title
+    for line in resp 
+      if line.text? 
+        @title = line.text 
+        break
+    console.log @title
 
     thumbs = []
-    for pic in $(response).find("a>img").parent()
+    # if (window.embed = response.find("embed")).length > 0
+    #   flash = embed.attr('flashvars')
+    #   video = /file=([-_\w\d]+\.[\w]+)/.exec(flash)[1]
+    #   image = /image=([-_\w\d]+\.[\w]+)/.exec(flash)[1]
+    #   thumbs.push
+    #     galleryUrl: video
+    #     thumbUrl: image
+    #     name: ''
+    #     type: 'video'
+    #     icon: 'icon-film'
+
+    for pic in response.find("a>img").parent()
       galUrl = urlMagic $(pic).attr('href'), siteUrlBits
       linkInfo = linkTypeAndIcon galUrl
       # generate model attributes for each galler 

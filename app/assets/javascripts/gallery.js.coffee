@@ -10,7 +10,7 @@ window.displayTypes =
     icon: 'icon-th'
   image: 
     pattern: /\.(jpg|png|bmp|gif|jpeg)$/
-    show: (url) -> showModal img(url)
+    show: (url) -> showImageModal url
     icon: 'icon-picture'
   video: 
     pattern: /\.(mov|mp4|flv)$/
@@ -27,7 +27,7 @@ window.displayTypes =
 # TODO: implement HTML5 video tags
 
 # list of blacklist regexes that will reject a URL
-window.blacklist = [/javascript/, /signup/, /track/, /#/] # [/(\/|\.)ads?(\/|\.)/]
+window.blacklist = [/javascript/, /signup/, /track/, /#/, /\w+\.\w+\/\w+\.\w+$/] # [/(\/|\.)ads?(\/|\.)/]
 window.blacklisted = (string) ->
   reject = false
   # check the string against each blacklist entry
@@ -205,8 +205,18 @@ createVideo = (src, width=800, height=480) ->
 window.showModal = (contents, callback) ->
   # show a modal dialog with the given contents
   div("modal", @fs, contents).attr("id", "modal").modal('show')
-
   callback() if callback
+
+window.showImageModal = (url) ->
+  window.content = img(url)[0]
+  modal = div("modal image", @fs, content).attr("id", "modal")
+  content.onload = ->
+    modal.css('margin-left', -Math.min(content.clientWidth, document.width) / 2 - 10)
+    modal.css('margin-top', -Math.min(content.clientHeight, document.height) / 2 - 10)
+  modal.modal('show')
+  console.log content, content.clientWidth, content.clientHeight
+  # modal.modal('show')
+
 
 $(document).ready ->
   # click the lookit button to load images from the URL

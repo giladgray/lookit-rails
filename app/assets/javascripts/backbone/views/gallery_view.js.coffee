@@ -21,13 +21,15 @@ class Lookit.Views.GalleryView extends Backbone.View
     return this
 
   showGalleries: (collection, response) =>
-    console.log "success!", collection
+    console.log "success!", collection, collection.length
+
+    document.title = @galleries.title + " @ lookit"
+    @$("#title").text(@galleries.title)
+
     list = @$("#content")
     collection.forEach (gal) ->
-      url = gal.get('galleryUrl')
-      if url.startsWith('http') and not blacklisted url
-        @gallery = new Lookit.Views.GalleryThumb(model: gal)
-        list.append(@gallery.render().el)
+      @gallery = new Lookit.Views.GalleryThumb(model: gal)
+      list.append(@gallery.render().el)
 
   slideshow: ->
     console.log "Creating carousel... ", @galleries

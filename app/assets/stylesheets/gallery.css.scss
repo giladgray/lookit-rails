@@ -46,7 +46,10 @@
 }
 
 .lookit {
-	border-radius: 0 0 10px 10px;
+	// border-radius: 0 0 10px 10px;
+	height: 40px;
+	max-width: 800px;
+	margin: 50px auto;
 	table {
 		margin: auto;
     	display: inline-block;
@@ -174,7 +177,7 @@ input#site2 {
 	border-color: gold;
 }
 .pic-container.seen {
-	opacity: 0.7;
+	opacity: 0.6;
 }
 .pic-container.seen:hover {
 	border-color: orchid;
@@ -186,7 +189,7 @@ input#site2 {
 	left: 10%;
 	width: 80%;
 	height: 90%;
-	max-height: 90%;
+	// max-height: 90%;
 	margin: auto;
 	padding: 10px;
 
@@ -203,6 +206,11 @@ input#site2 {
 		z-index: 5;
 	}
 }
+.modal.image {
+	top: 50%;
+	left: 50%;
+	@include size(auto, auto);
+}
 .modal.fullscreen {
 	@include size(100%, 100%);
 	top: 0;
@@ -210,6 +218,7 @@ input#site2 {
 	left: 0;
 	right: 0;
 	max-height: 100%;
+	margin: 0 !important;
 
 	img {
 		height: auto;

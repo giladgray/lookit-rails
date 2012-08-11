@@ -35,6 +35,5 @@ class Lookit.Views.GalleryThumb extends Backbone.View
     $(@el).addClass 'seen'
 
   toggleButtons: ->
-    console.log 'toggle'
     $(@el).toggleClass 'active'
 
