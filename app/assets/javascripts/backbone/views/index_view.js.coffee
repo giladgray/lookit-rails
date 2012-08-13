@@ -3,7 +3,7 @@ class Lookit.Views.IndexView extends Backbone.View
   el: 'div#container'
 
   events:
-  	'click #lookit': 'submit'
+    'click #lookit': 'submit'
 
   render: ->
     $(@el).html(@template())
@@ -11,6 +11,7 @@ class Lookit.Views.IndexView extends Backbone.View
 
   submit: (event) =>
     event.preventDefault()
-  	url = @$("#url").val()
-  	console.log "clicked on the button!", url
-  	router.navigate url, trigger: true
+    url = @$("#url").val()
+    console.log "clicked on the button!", url
+    router.navigate url, trigger: true
+    

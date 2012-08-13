@@ -210,10 +210,14 @@ window.showModal = (contents, callback) ->
 window.showImageModal = (url) ->
   window.content = img(url)[0]
   modal = div("modal image", @fs, content).attr("id", "modal")
-  content.onload = ->
-    modal.css('margin-left', -Math.min(content.clientWidth, document.width) / 2 - 10)
-    modal.css('margin-top', -Math.min(content.clientHeight, document.height) / 2 - 10)
+  content.onload = =>
+    # set the modal margins to half the image dimensions + inner margin and remember it for later
+    modal.css('margin-left', @marginLeft = -Math.min(content.clientWidth, document.width) / 2 - 10)
+    modal.css('margin-top', @marginTop = -Math.min(content.clientHeight, document.height) / 2 - 10)
   modal.modal('show')
+  # initialize dialog with last modal's margins
+  modal.css('margin-left', @marginLeft)
+  modal.css('margin-top', @marginTop)
   console.log content, content.clientWidth, content.clientHeight
   # modal.modal('show')
 
