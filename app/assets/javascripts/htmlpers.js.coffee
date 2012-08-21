@@ -31,3 +31,5 @@ window.icon = (name, white=false) ->
   html = tag("<i>", "icon-#{name}")
   html.addClass("icon-white") if white
   html
+
+$.fn.toString = () -> @prop('outerHTML')

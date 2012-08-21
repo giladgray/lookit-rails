@@ -49,7 +49,7 @@ class Lookit.Collections.GalleriesCollection extends Backbone.Collection
         thumbs.push
           galleryUrl: galUrl
           thumbUrl: urlMagic $(pic).find('img').attr('src'), siteUrlBits
-          name: $(pic).find('img').attr('alt')
+          name: $(pic).find('img').attr('alt') ? ''
           type: linkInfo[0]
           icon: linkInfo[1]
         # console.log thumbUrl, '~~', galleryUrl
