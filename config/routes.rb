@@ -7,6 +7,7 @@ Lookit::Application.routes.draw do
 
   match 'old' => "gallery#index"
   match 'show' => "gallery#show"
+  match 'fetch' => "gallery#fetch"
   match 'spine' => "gallery#spine"
 
   # The priority is based upon order of creation:
