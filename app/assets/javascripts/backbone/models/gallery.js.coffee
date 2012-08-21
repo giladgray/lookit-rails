@@ -19,27 +19,13 @@ class Lookit.Collections.GalleriesCollection extends Backbone.Collection
     else options.error 'Lookit is eyes only!'
 
   parse: (response) ->
-    siteUrlBits = urlRegex.exec @models[0].get('url')
     window.resp = response = $(response)
+    siteUrlBits = urlRegex.exec @models[0].get('url')
 
-    # seems the first element in the response is the page title
-    for line in resp 
-      if line.text? 
-        @title = line.text 
-        break
-    console.log @title
+    # find the title element by node name
+    @title = _.find(response, (item) -> item.nodeName == 'TITLE').text
 
     thumbs = []
-    # if (window.embed = response.find("embed")).length > 0
-    #   flash = embed.attr('flashvars')
-    #   video = /file=([-_\w\d]+\.[\w]+)/.exec(flash)[1]
-    #   image = /image=([-_\w\d]+\.[\w]+)/.exec(flash)[1]
-    #   thumbs.push
-    #     galleryUrl: video
-    #     thumbUrl: image
-    #     name: ''
-    #     type: 'video'
-    #     icon: 'icon-film'
 
     for pic in response.find("a>img").parent()
       galUrl = urlMagic $(pic).attr('href'), siteUrlBits
@@ -52,6 +38,17 @@ class Lookit.Collections.GalleriesCollection extends Backbone.Collection
           name: $(pic).find('img').attr('alt') ? ''
           type: linkInfo[0]
           icon: linkInfo[1]
-        # console.log thumbUrl, '~~', galleryUrl
+
+    # if (window.embed = response.find("embed")).length > 0
+    #   flash = embed.attr('flashvars')
+    #   video = /file=([-_\w\d]+\.[\w]+)/.exec(flash)[1]
+    #   image = /image=([-_\w\d]+\.[\w]+)/.exec(flash)[1]
+    #   thumbs.push
+    #     galleryUrl: video
+    #     thumbUrl: image
+    #     name: ''
+    #     type: 'video'
+    #     icon: 'icon-film'
+
     thumbs
  

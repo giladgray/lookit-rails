@@ -7,6 +7,7 @@ class Lookit.Views.GalleryThumb extends Backbone.View
     'click .btn-hover.close': 'remove'
     'click .btn-hover.open': 'open'
     'click a.pic': 'lookit' 
+    'click span.type': 'lookit' 
     'mouseenter': 'toggleButtons'
     'mouseleave': 'toggleButtons'
 
