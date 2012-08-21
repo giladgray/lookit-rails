@@ -4,6 +4,17 @@
 		<span class="btn refresh" title="Refresh this gallery" data-refresh="<%= @url %>"><i class="icon-refresh"></i></span>
 		<span class="btn remove" title="Remove this gallery" data-remove="content<%= @id %>"><i class="icon-trash"></i></span>
 	</div>
+	<div class="btn-group right" data-toggle="buttons-checkbox">
+		<span class="btn float" title="Float galleries left"><i class="icon-arrow-left"></i></span>
+		<span class="btn media" title="Show only images and videos"><i class="icon-film"></i></span>
+	</div>
+	<div class="input-prepend right">
+		<span class="add-on"><i class="icon-search" title="filter"></i></span><input id="filter" type="text" placeholder="filter results" class="span2">
+	</div>
+	<div class="input-prepend right">
+		<span class="add-on"><i class="icon-ban-circle" title="blacklist"></i></span><input id="blacklist" type="text" placeholder="blacklist" class="span2">
+	</div>
 	<h2><a href="<%= @url %>"><%= @url %></a> <small id="title"></small></h2>
 </div>
 <div class="site-list" id="content<%= @id %>"></div>
+<div class="modal" id="modal" style="display:none"></div>

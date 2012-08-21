@@ -37,3 +37,17 @@ class Lookit.Views.GalleryThumb extends Backbone.View
   toggleButtons: ->
     $(@el).toggleClass 'active'
 
+  showModal: ->
+    window.content = img(@model.get('galleryUrl'))
+    content[0].onload = =>
+      # set the modal margins to half the image dimensions + inner margin and remember it for later
+      @marginLeft = -Math.min(content[0].clientWidth, document.width) / 2 - 10
+      @marginTop = -Math.min(content[0].clientHeight, document.height) / 2 - 10
+      modal.css('margin-left', @marginLeft).css('margin-top', @marginTop)
+      console.log "setting margins! left: #{@marginLeft}, top: #{@marginTop}"
+    $("#modal").html(content).modal('show')
+    # initialize dialog with last modal's margins
+    modal.css('margin-left', @marginLeft).css('margin-top', @marginTop)
+    
+    console.log content, content.clientWidth, content.clientHeight
+

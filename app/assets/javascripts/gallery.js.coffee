@@ -10,7 +10,7 @@ window.displayTypes =
     icon: 'icon-th'
   image: 
     pattern: /\.(jpg|png|bmp|gif|jpeg)$/
-    show: (url) -> showImageModal url
+    show: (url) -> showImageModal img(url)
     icon: 'icon-picture'
   video: 
     pattern: /\.(mov|mp4|flv)$/
@@ -27,11 +27,11 @@ window.displayTypes =
 # TODO: implement HTML5 video tags
 
 # list of blacklist regexes that will reject a URL
-window.blacklist = [/javascript/, /signup/, /track/, /#/, /\w+\.\w+\/\w+\.\w+$/] # [/(\/|\.)ads?(\/|\.)/]
-window.blacklisted = (string) ->
+window.blacklist = [/javascript/, /signup/, /track/, /#/, /\w+\.\w+\/\w+\.(html|php)$/] # [/(\/|\.)ads?(\/|\.)/]
+window.blacklisted = (string, list=blacklist) ->
   reject = false
   # check the string against each blacklist entry
-  for item in blacklist
+  for item in list
     if item.test(string)
       reject = true 
       console.log "'#{string}' rejected by blacklist"
@@ -204,18 +204,23 @@ createVideo = (src, width=800, height=480) ->
 @fs = btn("fullscreen", "fullscreen").click -> $(".modal").toggleClass('fullscreen')
 window.showModal = (contents, callback) ->
   # show a modal dialog with the given contents
-  div("modal", @fs, contents).attr("id", "modal").modal('show')
+  modal = $('#modal').html(contents).modal('show')
   callback() if callback
+  modal
 
 window.showImageModal = (url) ->
-  window.content = img(url)[0]
-  modal = div("modal image", @fs, content).attr("id", "modal")
-  content.onload = =>
+  console.log "showing image modal", url
+  # window.content = img(url) #.click(-> $(".modal").toggleClass('fullscreen'))
+  url[0].onload = =>
     # set the modal margins to half the image dimensions + inner margin and remember it for later
-    modal.css('margin-left', @marginLeft = -Math.min(content.clientWidth, document.width) / 2 - 10)
-    modal.css('margin-top', @marginTop = -Math.min(content.clientHeight, document.height) / 2 - 10)
-  modal.modal('show')
+    @marginLeft = -Math.min(url[0].clientWidth, document.width) / 2 - 10
+    @marginTop = -Math.min(url[0].clientHeight, document.height) / 2 - 10
+    if url[0].clientWidth >= document.width or url[0].clientHeight >= document.height
+      @modal.addClass('big')
+    @modal.css('margin-left', @marginLeft).css('margin-top', @marginTop)
+    console.log "setting margins! left: #{@marginLeft}, top: #{@marginTop}"
   # initialize dialog with last modal's margins
+  @modal = showModal(url).addClass('image')
   modal.css('margin-left', @marginLeft)
   modal.css('margin-top', @marginTop)
   console.log content, content.clientWidth, content.clientHeight

@@ -6,6 +6,6 @@
 		</div>
 		<% end %>
 	</div>
-	<a class="left carousel-control" href="#carousel" data-slide="prev">‹</a>
-	<a class="right carousel-control" href="#carousel" data-slide="next">›</a>
+	<a class="left control" href="#carousel" data-slide="prev"><span>‹</span></a>
+	<a class="right control" href="#carousel" data-slide="next"><span>›</span></a>
 </div>
