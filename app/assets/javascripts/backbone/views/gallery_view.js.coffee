@@ -9,12 +9,15 @@ class Lookit.Views.GalleryView extends Backbone.View
     'click .btn.slideshow': 'slideshow'
     'click .btn.float': 'toggleFloat'
     'click .btn.media': 'toggleMedia'
+    'click .btn.slash': 'toggleSlash'
     # header filter fields update list of galleries
     'blur #blacklist': 'update'
     'blur #filter': 'update'
     # modal image click toggles fullscreen
     'click .modal.big img': 'fullscreenModal'
     'click .carousel img': 'fullscreenModal'
+    'click .modal .left.control': 'previousImage'
+    'click .modal .right.control': 'nextImage'
 
   initialize:  ->
     # field defaults
@@ -26,7 +29,6 @@ class Lookit.Views.GalleryView extends Backbone.View
     # build the URL with http:// and final /
     url = @options.url
     url = 'http://' + url unless url.startsWith('http')
-    url = url + '/' unless @options.url.indexOf('?') > 0 or /\/(\w+\.\w+)?$/.test @options.url
     @options.url = url
 
     # actually fetch the galleries in the given URL
@@ -41,9 +43,10 @@ class Lookit.Views.GalleryView extends Backbone.View
     $(@el).html(@template(url: url))
 
     numbers = /(\D*)(\d+)/g.exec url
-    console.log numbers.slice(2)
-    for match in numbers.slice(2)
-      @$('.page-header').append(JST['backbone/templates/number_slider'](number: match[1], margin: match[0]))
+    if numbers
+      console.log numbers.slice(2)
+      for match in numbers.slice(2)
+        @$('.page-header').append(JST['backbone/templates/number_slider'](number: match[1], margin: match[0]))
     return this
 
   createGalleries: (collection) =>
@@ -90,15 +93,35 @@ class Lookit.Views.GalleryView extends Backbone.View
     console.log "filtering by '#{@filter}'. blacklist: ", @blacklist
     @showGalleries()
 
-  fullscreenModal: () ->
+  fullscreenModal: ->
     console.log 'fullscreening modal'
     @$("#modal").toggleClass('fullscreen')
 
-  toggleFloat: () -> @$(".pic-container").toggleClass('pull-left')
+  toggleFloat: -> @$(".pic-container").toggleClass('pull-left')
 
-  toggleMedia: () -> 
+  toggleMedia: -> 
     @typeCheck = not @typeCheck
     @update()
 
+  toggleSlash: ->
+    console.log @galleries
+    url = @options.url
+    # toggle trailing slash
+    if /\/$/.test url
+      url = url.slice url.length - 1
+    else url += '/'
+    @options.url = url
+    @galleries.models[0].set 'url', url
+    console.log 'reloading', url
+    @galleries.fetch
+      success: @createGalleries
+      error: (error, message) -> console.error "ERROR! ", message
+
   carouselKeys: (event) ->
     console.log event
+
+  previousImage: (event) ->
+    $('.open').prev().find('a').click()
+
+  nextImage: (event) ->
+    $('.open').next().find('a').click()

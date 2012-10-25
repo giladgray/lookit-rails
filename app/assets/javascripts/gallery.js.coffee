@@ -204,7 +204,7 @@ createVideo = (src, width=800, height=480) ->
 @fs = btn("fullscreen", "fullscreen").click -> $(".modal").toggleClass('fullscreen')
 window.showModal = (contents, callback) ->
   # show a modal dialog with the given contents
-  modal = $('#modal').html(contents).modal('show')
+  modal = $('#modal').html(JST['backbone/templates/modal']()).append(contents).modal('show')
   callback() if callback
   modal
 

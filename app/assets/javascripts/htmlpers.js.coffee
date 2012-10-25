@@ -33,3 +33,9 @@ window.icon = (name, white=false) ->
   html
 
 $.fn.toString = () -> @prop('outerHTML')
+
+# removes the given class from any elements and applies it to this element.
+$.fn.takeClass = (targetClass) ->
+  $(".#{targetClass}").removeClass targetClass
+  @addClass targetClass
+  

@@ -1,5 +1,6 @@
 <a class="pic <%= @model.get('type') %>" href="<%= @model.get('galleryUrl') %>" target="_blank" title="<%= @model.get('name') %>">
 	<img src="<%= @model.get('thumbUrl') %>" alt="<%= @model.get('name') %>">
+	<span class="title"><%= @model.get('name') %></span>
 </a>
 <span class="type btn-hover horizontal"><i class="<%= @model.get('icon') %>"></i></span>
 <span class="close btn-hover vertical">×</span>

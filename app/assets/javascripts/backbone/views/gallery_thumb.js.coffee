@@ -30,12 +30,14 @@ class Lookit.Views.GalleryThumb extends Backbone.View
     console.log "lookit"
     for type, value of displayTypes
       if @model.get('type') == type then value.show(@model.get('galleryUrl'))
+    $(@el).takeClass 'open'
     @markAsSeen()
 
   markAsSeen: ->
     $(@el).addClass 'seen'
 
   toggleButtons: ->
+    $(@el).css 'font-size', @el.clientHeight
     $(@el).toggleClass 'active'
 
   showModal: ->
