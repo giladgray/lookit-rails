@@ -1,7 +1,7 @@
 class Lookit.Views.GalleryThumb extends Backbone.View
   template: JST["backbone/templates/thumb"]
   tagName: 'span'
-  className: 'pic-container thumbnail'
+  className: => "pic-container thumbnail #{@model.get('type')}"
 
   events:
     'click .btn-hover.close': 'remove'

@@ -204,7 +204,7 @@ input#site2 {
 		display: none;
 	}
 }
-.pic-container:hover .gallery .title { display: block; }
+.pic-container.gallery:hover .title { display: block; }
 .pic-container:hover {
 	border-color: gold;
 }

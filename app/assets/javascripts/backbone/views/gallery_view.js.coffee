@@ -25,18 +25,13 @@ class Lookit.Views.GalleryView extends Backbone.View
     @filter = ''
     @blacklist = []
     @views = []
+
+    url = @options.url
     
     # build the URL with http:// and final /
-    url = @options.url
     url = 'http://' + url unless url.startsWith('http')
-    @options.url = url
 
-    # actually fetch the galleries in the given URL
-    @galleries = new Lookit.Collections.GalleriesCollection(@options)
-    console.log "loading GalleriesCollection @ #{@options.url}"
-    @galleries.fetch
-      success: @createGalleries
-      error: (error, message) -> console.error "ERROR! ", message
+    @loadGalleries url
 
   render: ->
     url = @options.url
@@ -48,6 +43,15 @@ class Lookit.Views.GalleryView extends Backbone.View
       for match in numbers.slice(2)
         @$('.page-header').append(JST['backbone/templates/number_slider'](number: match[1], margin: match[0]))
     return this
+
+  loadGalleries: (url) ->
+    @url = url
+    # actually fetch the galleries in the given URL
+    @galleries = new Lookit.Collections.GalleriesCollection({url: url})
+    console.log "loading GalleriesCollection @ #{url}"
+    @galleries.fetch
+      success: @createGalleries
+      error: (error, message) -> console.error "ERROR! ", message
 
   createGalleries: (collection) =>
     @galleryViews = collection.map (gal) -> new Lookit.Views.GalleryThumb(model: gal).render()
@@ -105,17 +109,10 @@ class Lookit.Views.GalleryView extends Backbone.View
 
   toggleSlash: ->
     console.log @galleries
-    url = @options.url
     # toggle trailing slash
-    if /\/$/.test url
-      url = url.slice url.length - 1
-    else url += '/'
-    @options.url = url
-    @galleries.models[0].set 'url', url
-    console.log 'reloading', url
-    @galleries.fetch
-      success: @createGalleries
-      error: (error, message) -> console.error "ERROR! ", message
+    if /\/$/.test @url
+      @loadGalleries @url.slice(0, @url.length - 1)
+    else @loadGalleries @url + '/'
 
   carouselKeys: (event) ->
     console.log event

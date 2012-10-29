@@ -3,7 +3,7 @@
 		<table>
 			<tr>
 				<td style="width:95%;height:40px;">
-					<input class="input-large site" id="url" name="url" placeholder="enter an address to load" type="text" value="<%= @url %>">
+					<input class="input-large site" id="url" name="url" placeholder="enter an address to load" type="text" autofocus>
 				</td><td style="width:5%;height:40px;">
 					<button class="btn btn-info btn-large" id="lookit"><i class="icon-search icon-white"></i> lookit</button>
 				</td>
