@@ -18,6 +18,8 @@ class Lookit.Views.GalleryView extends Backbone.View
     'click .carousel img': 'fullscreenModal'
     'click .modal .left.control': 'previousImage'
     'click .modal .right.control': 'nextImage'
+    'click .number .btn.down': 'numberDown'
+    'click .number .btn.up': 'numberUp'
 
   initialize:  ->
     # field defaults
@@ -33,15 +35,18 @@ class Lookit.Views.GalleryView extends Backbone.View
 
     @loadGalleries url
 
-  render: ->
-    url = @options.url
-    $(@el).html(@template(url: url))
+    $('body').keydown @keypress
 
-    numbers = /(\D*)(\d+)/g.exec url
+  render: ->
+    $(@el).html(@template(url: @url))
+
+    numbers = /\D*(\d+)/g.exec @url
+    console.log numbers
     if numbers
-      console.log numbers.slice(2)
-      for match in numbers.slice(2)
-        @$('.page-header').append(JST['backbone/templates/number_slider'](number: match[1], margin: match[0]))
+      # console.log numbers.slice(1)
+      for number in numbers.slice(1)
+        console.log 'number', number
+        @$('.page-header').append(JST['backbone/templates/number_slider'](number: number))
     return this
 
   loadGalleries: (url) ->
@@ -63,13 +68,14 @@ class Lookit.Views.GalleryView extends Backbone.View
 
     document.title = @galleries.title + " @ lookit"
     @$("#title").text(@galleries.title)
+    @$('#url').text(@url).attr('href', @url)
 
     # view.remove() for view in @views
-    @views = _.filter @galleryViews, @filterGallery
+    # @views = _.filter @galleryViews, @filterGallery
     
     list = @$("#content").html('')
-    for view in @views
-      view.delegateEvents()
+    for view in @galleryViews when @filterGallery(view)
+      # view.delegateEvents()
       list.append(view.el) 
 
     console.log "success!", @views, @views.length
@@ -79,7 +85,7 @@ class Lookit.Views.GalleryView extends Backbone.View
     url = gallery.get('galleryUrl')
     blacklisted = _.any(@blacklist, (item) -> not _.isEmpty(item) and url.indexOf(item) >= 0) 
     filtered = gallery.get('name').indexOf(@filter) >= 0
-    typed = if @typeCheck then gallery.get('type') in ['image', 'video'] else true
+    typed = if @typeCheck then (gallery.get('type') in ['image', 'video']) else true
     filtered and typed and not blacklisted
 
   slideshow: ->
@@ -101,7 +107,7 @@ class Lookit.Views.GalleryView extends Backbone.View
     console.log 'fullscreening modal'
     @$("#modal").toggleClass('fullscreen')
 
-  toggleFloat: -> @$(".pic-container").toggleClass('pull-left')
+  toggleFloat: -> @$(".thumbnail").toggleClass('pull-left')
 
   toggleMedia: -> 
     @typeCheck = not @typeCheck
@@ -117,8 +123,29 @@ class Lookit.Views.GalleryView extends Backbone.View
   carouselKeys: (event) ->
     console.log event
 
-  previousImage: (event) ->
-    $('.open').prev().find('a').click()
+  previousImage: ->
+    $('.open').prevAll('.image').first().find('a').click()
 
-  nextImage: (event) ->
-    $('.open').next().find('a').click()
+  nextImage: ->
+    $('.open').nextAll('.image').first().find('a').click()
+
+  numberDown: (event) -> @numberChange event, -1
+
+  numberUp: (event) -> @numberChange event, 1
+
+  numberChange: (event, amount) ->
+    slider = $(event.currentTarget).parent()
+    num = slider.data('number')
+    @loadGalleries @url.replace(new RegExp('' + num, 'g'), num + amount + '')
+    slider.data('number', num + amount)
+
+  keypress: (event) =>
+    console.log event.which
+    switch event.which
+      # left - previous image
+      when 37 then @previousImage()
+      # right - next image
+      when 39 then @nextImage()
+      # space - toggle fullscreen
+      when 32 then $('.modal img').click()
+

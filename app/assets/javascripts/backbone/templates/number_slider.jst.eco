@@ -1,4 +1,4 @@
-<div class="number btn-group">
+<div class="number btn-group" data-number="<%= @number %>">
 	<button class="btn btn-mini down"><i class="icon-minus"></i></button>
 	<button class="btn btn-mini up"><i class="icon-plus"></i></button>
 </div>

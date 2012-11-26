@@ -5,6 +5,11 @@
 @import "bootstrap-responsive";
 @import "bootstrap";
 
+$modalPadding: 10px;
+$fullscreenPadding: 1.5 * $modalPadding;
+$controlGradientLight: rgba(0,0,0,0.0);
+$controlGradientDark: rgba(0,0,0,0.5);
+
 @mixin gradient($first, $second) {
 	background: $first;
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$first', endColorstr='$second');
@@ -223,7 +228,7 @@ input#site2 {
 	height: 90%;
 	// max-height: 90%;
 	margin: auto;
-	padding: 10px;
+	padding: $modalPadding;
 
 	img {
 		display: block;
@@ -240,9 +245,9 @@ input#site2 {
 
 	.control {
 		position: absolute;
-		top: 5%;
-		bottom: 5%;
-		width: 40px;
+		top: $modalPadding;
+		bottom: $modalPadding;
+		width: 20%;
 		padding: 25% 0;
 
 		font-size: 60px;
@@ -253,10 +258,31 @@ input#site2 {
 
 		cursor: pointer;
 		color: white;
-		background: #222;
-		opacity: 0.5;
-		border: 3px solid white;
-		@include border-radius(23px)
+		// background: #222;
+		opacity: 0.3;
+		// border: 3px solid white;
+		// @include border-radius(23px)
+
+		span {
+			position: absolute;
+			top: 50%;
+			// left: 50%;
+			margin-top: -15px;
+			// margin-left: -10px;
+		}
+	}
+	.control:hover { opacity: 1.0; }
+	.control.left {
+		@include gradient-horizontal($controlGradientDark, $controlGradientLight);
+		background-color: transparent;
+		left: 10px;
+		span { left: 20%; }
+	}
+	.control.right {
+		@include gradient-horizontal($controlGradientLight, $controlGradientDark);
+		background-color: transparent;
+		right: 10px;
+		span { right: 20%; }
 	}
 }
 .modal.image {
@@ -279,13 +305,20 @@ input#site2 {
 		height: auto;
 		max-height: none;
 		max-width: none;
-		padding: 15px;
-		border-radius: 10px;
 		background: white;
+		padding: $fullscreenPadding;
+		border-radius: 10px;
 	}
 
-	.btn.fullscreen {
+	.control {
 		position: fixed;
+		top: 0;
+	}
+	.control.left {
+		left: 0;
+	}
+	.control.right {
+		right: 0;
 	}
 }
 
