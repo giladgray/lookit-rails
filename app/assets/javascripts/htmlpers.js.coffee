@@ -39,3 +39,4 @@ $.fn.takeClass = (targetClass) ->
   $(".#{targetClass}").removeClass targetClass
   @addClass targetClass
   
+window.tmpl = (template) -> JST["backbone/templates/#{template}"]

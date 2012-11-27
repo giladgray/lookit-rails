@@ -146,7 +146,7 @@ input#site2 {
 	opacity: 0.5; 
 	display: none;
 }
-.active .btn-hover { display: block; }
+:hover > .btn-hover { display: block; }
 
 .btn-hover:hover { opacity: 0.8; }
 .btn-hover.vertical {
@@ -187,6 +187,7 @@ input#site2 {
 	display: inline-block;
 	position: relative;
 	width: auto;
+
 	.title {
 		position: absolute;
 		top: 5px;
@@ -208,16 +209,19 @@ input#site2 {
 
 		display: none;
 	}
-}
-.pic-container.gallery:hover .title { display: block; }
-.pic-container:hover {
-	border-color: gold;
-}
-.pic-container.seen {
-	opacity: 0.6;
-}
-.pic-container.seen:hover {
-	border-color: orchid;
+
+	&:hover {
+		border-color: gold;
+	}
+
+	&.gallery:hover .title { display: block; }
+
+	&.seen {
+		opacity: 0.6;
+		&:hover {
+			border-color: orchid;
+		}
+	}
 }
 
 // resize the modal dialog so it adapts to the image size
@@ -365,6 +369,25 @@ input#site2 {
 	}
 }
 
-.number .btn {
-padding: 2px 4px;
+#url {
+	display: inline-block;
+
+	span { float: left; }
+
+	.number {
+		position: relative;
+
+		&:hover { color: orange; }
+
+		.btn-group {
+			position: absolute;
+			left: 50%;
+			min-width: 47px;
+			margin-left: -25px !important;
+
+			&:hover { z-index: 1000; }
+
+			.btn { padding: 2px 4px; }
+		}
+	}
 }
