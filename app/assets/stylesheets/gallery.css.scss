@@ -372,7 +372,7 @@ input#site2 {
 #url {
 	display: inline-block;
 
-	span { float: left; }
+	> span { float: left; }
 
 	.number {
 		position: relative;

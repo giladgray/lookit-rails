@@ -75,7 +75,7 @@ class Lookit.Views.GalleryView extends Backbone.View
 
     document.title = @galleries.title + " @ lookit"
     @$("#title").text(@galleries.title)
-    # @$('#url').text(@url).attr('href', @url)
+    @$('#url').attr('href', @url)
     
     list = @$("#content").html('')
     for view in @galleryViews
@@ -140,6 +140,8 @@ class Lookit.Views.GalleryView extends Backbone.View
     num = slider.data('number')
     @loadGalleries @url.replace(new RegExp(num, 'g'), num + amount + '')
     slider.data('number', num + amount)
+    # update slider text
+    slider.prev().text(num + amount)
 
   keypress: (event) =>
     console.log event.which
