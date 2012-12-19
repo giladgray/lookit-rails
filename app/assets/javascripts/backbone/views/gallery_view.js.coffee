@@ -48,7 +48,10 @@ class Lookit.Views.GalleryView extends Backbone.View
     while numbers = decimals.exec @url
       # build the URL string as we go, wrapping each segment in spans for styling
       # number buttons appear underneath their respective numbers
-      measure.append(tmpl('number_slider')(previous: numbers[1], number: numbers[2]))
+      measure.append tmpl('number_slider')
+        previous: numbers[1]
+        number: numbers[2]
+        index: decimals.lastIndex - numbers[2].length
       lastIndex = decimals.lastIndex
     # append the rest of the URL that wasn't matched
     measure.append("<span>#{@url.slice lastIndex}</span>")
