@@ -20,10 +20,10 @@ window.displayTypes =
     pattern: /<embed/
     show: (url) ->
     icon: 'icon-file'
-  none:
+  iframe:
     pattern: /\.(wmv|mpg)$/
-    show: (url) -> window.open url
-    icon: 'icon-share'
+    show: (url) -> showModal tag('<iframe>').attr('src', url)
+    icon: 'icon-film'
 # TODO: implement HTML5 video tags
 
 # list of blacklist regexes that will reject a URL
