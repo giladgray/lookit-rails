@@ -14,13 +14,10 @@ class Lookit.Views.GalleryView extends Backbone.View
     'blur #blacklist': 'update'
     'blur #filter': 'update'
     # modal events
-    'click .modal.big img': 'fullscreenModal'
+    'click .modal img': 'fullscreenModal'
     'click .carousel img': 'fullscreenModal'
     'click .modal .left.control': 'previousImage'
     'click .modal .right.control': 'nextImage'
-    # number buttons
-    'click .number .btn.down': 'numberDown'
-    'click .number .btn.up': 'numberUp'
 
   initialize:  ->
     # field defaults
@@ -38,20 +35,24 @@ class Lookit.Views.GalleryView extends Backbone.View
 
     $('body').keydown @keypress
 
+    # TODO: must be a way to replace this global event
+    Backbone.Events.on 'gallery:load', (url) => @loadGalleries url
+
   render: ->
     $(@el).html(@template(url: @url))
 
-    # regular expression to capture numbers from URL
+    # regular expression to break URL into alpha and numeric blocks
     decimals = new RegExp('(\\D*)(\\d+)', 'g')
     measure = $('h2 a').text('')
     # create number buttons for each number until there are no more
     while numbers = decimals.exec @url
-      # build the URL string as we go, wrapping each segment in spans for styling
-      # number buttons appear underneath their respective numbers
-      measure.append tmpl('number_slider')
-        previous: numbers[1]
+      # append previous non-number string
+      measure.append span '', numbers[1]
+      # append a number counter
+      counter = new Lookit.Views.NumberCounter
         number: numbers[2]
         index: decimals.lastIndex - numbers[2].length
+      measure.append counter.render()
       lastIndex = decimals.lastIndex
     # append the rest of the URL that wasn't matched
     measure.append("<span>#{@url.slice lastIndex}</span>")
@@ -132,19 +133,6 @@ class Lookit.Views.GalleryView extends Backbone.View
 
   nextImage: ->
     $('.open').nextAll('.image').first().find('a').click()
-
-  numberDown: (event) -> @numberChange event, -1
-
-  numberUp: (event) -> @numberChange event, 1
-
-  numberChange: (event, amount) ->
-    event.preventDefault()
-    slider = $(event.currentTarget).parent()
-    num = slider.data('number')
-    @loadGalleries @url.replace(new RegExp(num, 'g'), num + amount + '')
-    slider.data('number', num + amount)
-    # update slider text
-    slider.prev().text(num + amount)
 
   keypress: (event) =>
     console.log event.which
